@@ -1,0 +1,12 @@
+*.stackdump
+
+# MS Office tempolary file
+~*
+
+# RStudio
+.Rproj.user
+.RData
+.Rhistory
+
+#ignore thumbnails created by windows
+Thumbs.db
