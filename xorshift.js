@@ -1,9 +1,10 @@
-// Xorshift32の実装
+// Xorshift32による乱数発生器
 //  JavaScriptのMath.random()は乱数のseedが設定できない
-//  同じ割付表を再現できるよう、seedが設定できて実装が簡単なXorshiftを自分で実装
+//  同じ乱数表を再現できるよう、seedが設定できて実装が簡単なXorshiftで作成
+//  [参考] http://d.hatena.ne.jp/nakamura001/touch/20110521/1305997364
 
 var XORShift = (function(){
-    // seedsの初期値
+    // seedsの格納用
     var x, y, z, w;
 
     // 公開メソッド
@@ -27,7 +28,14 @@ var XORShift = (function(){
             this.x = 123456789;
             this.y = 362436069;
             this.z = 521288629;
+            // seedが指定された場合は4つ目のseedをその値にする
             this.w = seed ? seed : 88675123;
+        },
+
+        // 初期化（seed設定＋シャッフル）
+        init : function(seed, n){
+            this.setSeed(seed);
+            this.shuffle(n);
         },
 
         // 乱数の取得
@@ -38,15 +46,15 @@ var XORShift = (function(){
                 this.shuffle(20);
             }
 
-            // 32bit  XORShift
+            // 32bit XORShift
             var t  = this.x ^ (this.x << 11);
             this.x = this.y;
             this.y = this.z;
             this.z = this.w;
             this.w = (this.w ^ (this.w >>> 17)) ^ (t ^ (t >>> 13));
 
-            // >>>0 で unsignedに変換し、0～1の範囲にして返す
-            return (this.w >>> 0) / 0xffffffff;
+            // >>>0 でunsignedに変換してから、[0, 1) の範囲にして返す
+            return ((this.w >>> 0) % 0xffffffff) / 0xffffffff;
         }
     }
 })();
