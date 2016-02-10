@@ -45,8 +45,8 @@ var XORShift = (function(){
             this.z = this.w;
             this.w = (this.w ^ (this.w >>> 17)) ^ (t ^ (t >>> 13));
 
-            // 負の数にならないよう先頭ビットを0にして、0～1で返す
-            return (this.w & 0x7fffffff) / 0x7fffffff;
+            // >>>0 で unsignedに変換し、0～1の範囲にして返す
+            return (this.w >>> 0) / 0xffffffff;
         }
     }
-})()
+})();
