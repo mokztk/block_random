@@ -1,7 +1,12 @@
-// XORShift32による乱数発生器
+// XORShiftによる擬似乱数発生器　/ MORI Kazutaka / 2016-02-18 update
 //  JavaScriptのMath.random()は乱数のseedが設定できない
 //  同じ乱数表を再現できるよう、seedが設定できて実装が簡単なXORShiftで作成
-//  [参考] http://d.hatena.ne.jp/nakamura001/20110521/1305997364
+
+//  Marsaglia G. Journal of Statistical Software 8: 2003.
+//    https://www.jstatsoft.org/article/view/v008i14
+//  ライセンスについては、原著に記載なし。JSSは論文がCC、コードがGPL2+となっているが、
+//  本文中に短いコードがあるのみでGPLが適用できるような長いコードではないことから、本文の
+//  Creative Commons Attribution 3.0 Unported License とみなされているらしい
 
 var XORShift = (function(){
     // seedsの格納用
@@ -20,8 +25,8 @@ var XORShift = (function(){
 
         // 乱数のシャッフル
         shuffle : function(n){
-            // 回数を指定されていなければ10回分進める
-            for(var i = 0; i < (n ? n : 10); i++) this.rnd()
+            // 回数を指定されていなければ20回分進める
+            for(var i = 0; i < (n ? n : 20); i++) this.rnd()
         },
 
         // 初期化（seed設定＋シャッフル）
@@ -33,9 +38,9 @@ var XORShift = (function(){
         // 乱数の取得
         rnd : function(){
             // 初期化がまだされていなければ初期化を行う
-            if(!this.x) this.init(Date.now(), 20);
+            if(!this.x) this.init(Date.now(), 40);
 
-            // 32bit XORShift
+            // 128bit XORShift
             var t  = this.x ^ (this.x << 11);
             this.x = this.y;
             this.y = this.z;
