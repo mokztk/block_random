@@ -16,15 +16,70 @@
 <body>
 
 <!-- メイン画面 -->
-<div class="wrapper">
-
+<div id="wrapper">
+	<div id="header">
+		<h1>置換ブロック法による割付表の作成</h1>
+		<p>
+			置換ブロック法によるランダム化 Permuted block randomization により並行2群間比較試験のための割付表を作成します。
+			ブロックサイズを変更したり（現状では固定サイズのみ）、層別ランダム化のために複数の割付表を同時に作成したりできるようにしました。
+		</p>
+	</div> <!-- #header -->
+	
+	<hr>
+	
+	<div id="setting">
+		<form class="pure-form pure-form-aligned">
+			<fieldset>
+				<div class="pure-control-group">
+					<label>ブロックサイズ</label>
+					<select id="bsize" required>
+						<option>2</option>
+						<option selected>4</option>
+						<option>6</option>
+						<option>8</option>
+						<option>10</option>
+					</select>
+					<span class="description">
+						大きい方が次が予測し辛くなりますが、両群で数が揃わなくなる危険が高くなります。
+					</span>
+				</div>
+				
+				<div class="pure-control-group">
+					<label>作成する割付表の数</label>
+					<input id="ngroups" type="text" value="2" placeholder="必須項目" required>
+				</div>
+				
+				<div class="pure-control-group">
+					<label>1群あたりの必要数</label>
+					<input id="nming" type="text" value="20" placeholder="必須項目" required>
+					<span class="description">
+						実際には、必要数を満たすブロックサイズの倍数になります。
+					</span>
+				</div>
+				
+				<div class="pure-control-group">
+					<label>乱数表番号</label>
+					<input id="seed" type="text" placeholder="（任意）">
+					<span class="description">
+						数値を指定すると、同じ内容の割付表を再発行できるようになります。
+					</span>
+				</div>
+				
+				<div class="pure-controls">
+					<button class="pure-button pure-button-primary">作成！</button>
+				</div>
+			</fieldset>
+		</form>
+	</div> <!-- #setting -->
+	
+	<hr>
+	
+	<div id="#alloctables">
+		<p>ここに割付表が表示されます。</p>
+	</div> <!-- #alloctables -->
 	
 	
-	
-	
-	
-	
-</div> <!-- wrapper -->
+</div> <!-- #wrapper -->
 
 <!-- 以降、スクリプト関係 -->
 	
