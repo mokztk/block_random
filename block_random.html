@@ -66,7 +66,7 @@
 				</div>
 				
 				<div class="pure-controls">
-					<button class="pure-button pure-button-primary">作成！</button>
+					<button id="submit" class="pure-button pure-button-primary">作成！</button>
 				</div>
 			</fieldset>
 		</form>
@@ -74,7 +74,7 @@
 	
 	<hr>
 	
-	<div id="#alloctables">
+	<div id="alloctables">
 		<p>ここに割付表が表示されます。</p>
 	</div> <!-- #alloctables -->
 	
@@ -98,8 +98,95 @@
 	var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
 	
 	// run at DOM ready
-	$(function() {
+	$(function () {
+		"use strict";
 		
+		/**
+		 *  「作成」ボタンをクリックした時の処理
+		 */
+		$("#submit").on("click", function (e, index) {
+			/**
+			 *  割付表の表示スペースをクリア
+			 */
+			$("#alloctables p").remove();
+			
+			/**
+			 *  変数の宣言
+			 */
+			var block_size, n_list, min_list, user_seed,
+				alloc_table = [], pb, i;
+			
+			/**
+			 *  作成した割付表を格納するための配列
+			 *  @type {[String]}
+			 */
+			alloc_table = [""];
+			
+			/**
+			 *  ブロックサイズ
+			 *  @type {number}
+			 */
+			block_size = $("#bsize")[0].value;
+						
+			/**
+			 *  作成する割付表の数
+			 *  @type {number}
+			 */
+			n_list = $("#ngroups")[0].value;
+			/**
+			 *  nlist の値が不正な場合は、警告を表示して初期値(2)を使用
+			 */
+			if (!n_list || isNaN(n_list)) {
+				n_list = 2;
+				$("#ngroups").set("value", n_list);
+				$("#alloctables").add(
+					EE("p", "「作成する割付表の数」が不正です。初期値 2 で作成します。")
+				);
+			}
+			
+			/**
+			 *  1群あたりの必要数
+			 *  @type {number}
+			 */
+			min_list = $("#nming")[0].value;
+			/**
+			 *  min_list の値が不正な場合は、警告を表示して初期値(20)を使用
+			 */
+			if (!min_list || isNaN(min_list)) {
+				min_list = 20;
+				$("#nming").set("value", min_list);
+				$("#alloctables").add(
+					EE("p", "「1群あたりの必要数」が不正です。初期値 20 で作成します。")
+				);
+			}
+			
+			/**
+			 *  乱数のseed
+			 *  @type {number}
+			 */
+			user_seed = $("#seed")[0].value;
+			/**
+			 *  user_seed の値が不正な場合は、とくに警告を表示せず、Date.now() を使用
+			 */
+			if (!user_seed || isNaN(user_seed)) {
+				user_seed = Date.now();
+			}
+			
+			/**
+			 *  置換ブロック法の基本ブロックを作成するためのオブジェクト
+			 *  @type {PermBlock}
+			 *  @param {number} bsize - ブロックサイズ
+			 */
+			pb = new PermBlock(block_size);
+			
+			/**
+			 *  乱数発生器 XORShift の初期化
+			 *  @param {number} seed - 乱数のseed
+			 *  @param {number} n - シャッフルのため乱数列を進める回数
+			 */
+			XORShift.init(user_seed, 50);
+			
+		});
 	});
 </script>
 
