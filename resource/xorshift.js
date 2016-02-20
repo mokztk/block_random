@@ -11,12 +11,12 @@
 /**
  *  128bit XORShift による擬似乱数発生器
  */
-var XORShift = (function(){
+var XORShift = (function () {
     /**
 	 *  seedsの格納用
 	 */
     var x, y, z, w;
-
+	
     /**
 	 *  公開メソッド
 	 */
@@ -25,7 +25,7 @@ var XORShift = (function(){
 		 *  seedsの初期化
 		 *  @param {number} [seed] - 4番目のシードを変更する場合に指定
 		 */
-        setSeed : function(seed){
+        setSeed : function (seed) {
             this.x = 123456789;
             this.y = 362436069;
             this.z = 521288629;
@@ -39,11 +39,12 @@ var XORShift = (function(){
 		 *  乱数のシャッフル
 		 *  @param {number} [n = 20] - 乱数列を進める回数
 		 */
-        shuffle : function(n){
+        shuffle : function (n) {
             /**
 			 *  回数を指定されていなければ20回分進める
 			 */
-            for(var i = 0; i < (n ? n : 20); i++) this.rnd()
+            var i;
+			for (i = 0; i < (n ? n : 20); i++) { this.rnd(); }
         },
 
         /**
@@ -51,7 +52,7 @@ var XORShift = (function(){
 		 *  @param {number} [seed] - 4番目のseedの初期値
 		 *  @param {number} [n] - 乱数列を進める回数
 		 */
-        init : function(seed, n){
+        init : function (seed, n) {
             this.setSeed(seed);
             this.shuffle(n);
         },
@@ -60,11 +61,11 @@ var XORShift = (function(){
 		 *  乱数をひとつ生成する（Math.random()互換）
 		 *  @return {number} [0, 1) の範囲の数値
 		 */
-        rnd : function(){
+        rnd : function () {
             /**
 			 *  初期化がまだされていなければ初期化を行う
 			 */
-            if(!this.x) this.init(Date.now(), 40);
+            if (!this.x) { this.init(Date.now(), 40); }
 
             /**
 			 *  128bit XORShift
@@ -80,5 +81,5 @@ var XORShift = (function(){
 			 */
             return ((this.w >>> 0) % 0xffffffff) / 0xffffffff;
         }
-    }
-})();
+    };
+}());
