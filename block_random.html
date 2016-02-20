@@ -120,7 +120,7 @@
 			 *  作成した割付表を格納するための配列
 			 *  @type {[String]}
 			 */
-			alloc_table = [""];
+			alloc_table = [];
 			
 			/**
 			 *  ブロックサイズ
@@ -185,6 +185,23 @@
 			 *  @param {number} n - シャッフルのため乱数列を進める回数
 			 */
 			XORShift.init(user_seed, 50);
+			
+			/**
+			 *  割付表の作成
+			 *    割付表の長さが min_list を超えるまで、順にブロックを繋いでいく
+			 */
+			for (i = 0; i < n_list; i++) { alloc_table[i] = ""; }
+			while (alloc_table[0].length < min_list) {
+				/**
+				 *  1群ずつ作っていくと、あとで延長したときに序盤が変わってしまう
+				 *  そこで、各群横並びで順次、割付表を伸ばしていくことにする
+				 */
+				for (i = 0; i < n_list; i++) {
+					alloc_table[i] += pb.getBlock(XORShift.rnd());
+				}
+			}
+			
+			console.log(alloc_table);
 			
 		});
 	});
