@@ -11,7 +11,7 @@
 	
 	<!-- Pure.css と追加のスタイル設定 -->
 	<link rel="stylesheet" href="resource/pure-min.css">
-	<link rel="stylesheet" href="resource/extra.css">
+	<!-- link rel="stylesheet" href="resource/extra.css" -->
 </head>
 <body>
 
@@ -108,13 +108,13 @@
 			/**
 			 *  割付表の表示スペースをクリア
 			 */
-			$("#alloctables p").remove();
+			$("#alloctables *").remove();
 			
 			/**
 			 *  変数の宣言
 			 */
 			var block_size, n_list, min_list, user_seed,
-				alloc_table = [], pb, i;
+				alloc_table, pb, i, res;
 			
 			/**
 			 *  作成した割付表を格納するための配列
@@ -201,8 +201,27 @@
 				}
 			}
 			
-			console.log(alloc_table);
-			
+			/**
+			 *  結果を表にする
+			 *  あわせて、乱数表番号（seed）も表示する
+			 */
+			res = EE("table",
+					 {"@class" : "pure-table pure-table-bordered"});
+			for (i =0; i < n_list; i++) {
+				res.add(
+					EE("tr", [
+						EE("th", {"@style" : "background: #ccc"}, "Group " + (i + 1)),
+					    EE("td", alloc_table[i].split("").join(" "))
+					])
+				);
+			}
+			res.add(
+				EE("tr", [
+					EE("th", {"@style" : "background: #ccc"}, "乱数表番号"),
+					EE("td", user_seed)
+				])
+			);
+			$("#alloctables").add(res);
 		});
 	});
 </script>
