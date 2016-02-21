@@ -11,7 +11,7 @@
 	
 	<!-- Pure.css と追加のスタイル設定 -->
 	<link rel="stylesheet" href="resource/pure-min.css">
-	<link rel="stylesheet" href="resource/extra.css">
+	<!-- link rel="stylesheet" href="resource/extra.css" -->
 </head>
 <body>
 
@@ -66,7 +66,7 @@
 				</div>
 				
 				<div class="pure-controls">
-					<button class="pure-button pure-button-primary">作成！</button>
+					<button id="submit" class="pure-button pure-button-primary">作成！</button>
 				</div>
 			</fieldset>
 		</form>
@@ -74,7 +74,7 @@
 	
 	<hr>
 	
-	<div id="#alloctables">
+	<div id="alloctables">
 		<p>ここに割付表が表示されます。</p>
 	</div> <!-- #alloctables -->
 	
@@ -98,10 +98,138 @@
 	var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
 	
 	// run at DOM ready
-	$(function() {
+	$(function () {
+		"use strict";
 		
+		/**
+		 *  「作成」ボタンをクリックした時の処理
+		 */
+		$("#submit").on("click", function (e, index) {
+			/**
+			 *  割付表の表示スペースをクリア
+			 */
+			$("#alloctables *").remove();
+			
+			/**
+			 *  変数の宣言
+			 */
+			var block_size, n_list, min_list, user_seed,
+				alloc_table, pb, i, res;
+			
+			/**
+			 *  作成した割付表を格納するための配列
+			 *  @type {[String]}
+			 */
+			alloc_table = [];
+			
+			/**
+			 *  ブロックサイズ
+			 *  @type {number}
+			 */
+			block_size = $$("#bsize").value;
+						
+			/**
+			 *  作成する割付表の数
+			 *  @type {number}
+			 */
+			n_list = $$("#ngroups").value;
+			/**
+			 *  nlist の値が不正な場合は、警告を表示して初期値(2)を使用
+			 */
+			if (!n_list || isNaN(n_list)) {
+				n_list = 2;
+				$("#ngroups").set("value", n_list);
+				$("#alloctables").add(
+					EE("p", "「作成する割付表の数」が不正です。初期値 2 で作成します。")
+				);
+			}
+			
+			/**
+			 *  1群あたりの必要数
+			 *  @type {number}
+			 */
+			min_list = $$("#nming").value;
+			/**
+			 *  min_list の値が不正な場合は、警告を表示して初期値(20)を使用
+			 */
+			if (!min_list || isNaN(min_list)) {
+				min_list = 20;
+				$("#nming").set("value", min_list);
+				$("#alloctables").add(
+					EE("p", "「1群あたりの必要数」が不正です。初期値 20 で作成します。")
+				);
+			}
+			
+			/**
+			 *  乱数のseed
+			 *  @type {number}
+			 */
+			user_seed = $$("#seed").value;
+			/**
+			 *  user_seed の値が不正な場合は、とくに警告を表示せず、Date.now() を使用
+			 */
+			if (!user_seed || isNaN(user_seed)) {
+				user_seed = Date.now();
+			}
+			
+			/**
+			 *  置換ブロック法の基本ブロックを作成するためのオブジェクト
+			 *  @type {PermBlock}
+			 *  @param {number} bsize - ブロックサイズ
+			 */
+			pb = new PermBlock(block_size);
+			
+			/**
+			 *  乱数発生器 XORShift の初期化
+			 *  @param {number} seed - 乱数のseed
+			 *  @param {number} n - シャッフルのため乱数列を進める回数
+			 */
+			XORShift.init(user_seed, 50);
+			
+			/**
+			 *  割付表の作成
+			 *    割付表の長さが min_list を超えるまで、順にブロックを繋いでいく
+			 */
+			for (i = 0; i < n_list; i++) { alloc_table[i] = ""; }
+			while (alloc_table[0].length < min_list) {
+				/**
+				 *  1群ずつ作っていくと、あとで延長したときに序盤が変わってしまう
+				 *  そこで、各群横並びで順次、割付表を伸ばしていくことにする
+				 */
+				for (i = 0; i < n_list; i++) {
+					alloc_table[i] += pb.getBlock(XORShift.rnd());
+				}
+			}
+			
+			/**
+			 *  結果を表にする
+			 *  あわせて乱数表番号（seed）も表示する
+			 *    後ろで、非表示の noscript#template に記載したテンプレートに流し込む
+			 */
+			res = _.format(
+				window.unescape($$("#template").innerHTML),
+				{alloctable : alloc_table, seed : user_seed}
+			);
+			$("#alloctables").add(HTML(res));
+		});
 	});
 </script>
+
+<!-- 結果表のテンプレート：エラー回避のため、不等号はエスケープ処理しておく -->
+<noscript id="template" style="display: none;">
+	%3Ctable class="pure-table pure-table-bordered"%3E
+		{{each table, i : alloctable}}
+		%3Ctr%3E
+			%3Cth style="background: #ccc;"%3EGroup {{i+1}}%3C/th%3E
+			%3Ctd style="letter-spacing: 1ex;"%3E{{table}}%3C/td%3E
+		%3C/tr%3E
+		{{/each}}
+		%3Ctr%3E
+			%3Cth style="background: #ccc;"%3E乱数表番号%3C/th%3E
+			%3Ctd%3E{{seed}}%3C/td%3E
+		%3C/tr%3E
+	%3C/table%3E
+</noscript>
 
 </body>
 </html>
