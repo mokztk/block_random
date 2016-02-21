@@ -1,0 +1,39 @@
+/* 追加のスタイル */
+
+div#wrapper {
+	margin-left :  1em;
+	margin-right : 1em;
+}
+
+.description {
+	color       : darkred;
+	font-size   : smaller;
+	margin-left : 1em;
+}
+
+p.alert {
+	color      : red;
+	font-style : oblique;
+}
+
+noscript#template {
+	display : none;
+}
+
+th.resgroups {
+	font-weight : bold;
+	background-color : lightgray;
+}
+
+td.reslist {
+	letter-spacing : 1ex;
+}
+
+@media print {
+	button#submit,
+	.description,
+	p.alert
+	{
+		display : none;
+	}
+}
