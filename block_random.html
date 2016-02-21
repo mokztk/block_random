@@ -11,7 +11,7 @@
 	
 	<!-- Pure.css と追加のスタイル設定 -->
 	<link rel="stylesheet" href="resource/pure-min.css">
-	<!-- link rel="stylesheet" href="resource/extra.css" -->
+	<link rel="stylesheet" href="resource/extra.css">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
 		<h1>置換ブロック法による割付表の作成</h1>
 		<p>
 			置換ブロック法によるランダム化 Permuted block randomization により並行2群間比較試験のための割付表を作成します。
-			ブロックサイズを変更したり（現状では固定サイズのみ）、層別ランダム化のために複数の割付表を同時に作成したりできるようにしました。
+			ブロックサイズを変更したり（現状では固定サイズのみ）、層別ランダム化 Stratified randomization のために複数の割付表を同時に作成したりできるようにしました。
 		</p>
 	</div> <!-- #header -->
 	
@@ -140,7 +140,8 @@
 				n_list = 2;
 				$("#ngroups").set("value", n_list);
 				$("#alloctables").add(
-					EE("p", "「作成する割付表の数」が不正です。初期値 2 で作成します。")
+					EE("p", {"@class" : "alert"},
+					   "「作成する割付表の数」が不正です。初期値 2 で作成します。")
 				);
 			}
 			
@@ -156,7 +157,8 @@
 				min_list = 20;
 				$("#nming").set("value", min_list);
 				$("#alloctables").add(
-					EE("p", "「1群あたりの必要数」が不正です。初期値 20 で作成します。")
+					EE("p", {"@class" : "alert"},
+					   "「1群あたりの必要数」が不正です。初期値 20 で作成します。")
 				);
 			}
 			
@@ -216,16 +218,16 @@
 </script>
 
 <!-- 結果表のテンプレート：エラー回避のため、不等号はエスケープ処理しておく -->
-<noscript id="template" style="display: none;">
+<noscript id="template">
 	%3Ctable class="pure-table pure-table-bordered"%3E
 		{{each table, i : alloctable}}
 		%3Ctr%3E
-			%3Cth style="background: #ccc;"%3EGroup {{i+1}}%3C/th%3E
-			%3Ctd style="letter-spacing: 1ex;"%3E{{table}}%3C/td%3E
+			%3Cth class="resgroups"%3EGroup {{i+1}}%3C/th%3E
+			%3Ctd class="reslist"%3E{{table}}%3C/td%3E
 		%3C/tr%3E
 		{{/each}}
 		%3Ctr%3E
-			%3Cth style="background: #ccc;"%3E乱数表番号%3C/th%3E
+			%3Cth class="resgroups"%3E乱数表番号%3C/th%3E
 			%3Ctd%3E{{seed}}%3C/td%3E
 		%3C/tr%3E
 	%3C/table%3E
