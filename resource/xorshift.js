@@ -14,41 +14,25 @@
  *  128bit XORShift による擬似乱数発生器
  *  @constructor
  *  @param {number} [seed] - 4番目の乱数シードを変更する場合に指定
- *  @param {number} [n = 40] - 乱数列を進める回数
  */
-var XORShift = function (seed, n) {
-    var x, y, z, w, i;
+var XORShift = function (seed) {
+    var x, y, z, w;
 	
 	/**
 	 *  seedsの初期化
+	 *  @param {number} [seed] - 4番目のシードを変更する場合に指定
 	 */
-	this.x = 123456789;
-	this.y = 362436069;
-	this.z = 521288629;
-	/**
-	 *  seedが指定された場合は4つ目のseedをその値にする
-	 */
-	this.w = seed ? seed : 88675123;
-
-	/**
-	 *  乱数のシャッフル
-	 *    回数を指定されていなければ40回分進める
-	 */
-	this.shuffle(n ? n : 40);
-};
-
-/**
- *  seedsの初期化
- *  @param {number} [seed] - 4番目のシードを変更する場合に指定
- */
-XORShift.prototype.setSeed = function (seed) {
-	this.x = 123456789;
-	this.y = 362436069;
-	this.z = 521288629;
-	/**
-	 *  seedが指定された場合は4つ目のseedをその値にする
-	 */
-	this.w = seed ? seed : 88675123;
+	this.setSeed = function (seed) {
+		this.x = 123456789;
+		this.y = 362436069;
+		this.z = 521288629;
+		/**
+		 *  seedが指定された場合は4つ目のseedをその値にする
+		 */
+		this.w = seed ? seed : 88675123;
+	};
+	
+	this.setSeed(seed);
 };
 
 /**
@@ -74,26 +58,36 @@ XORShift.prototype.init = function (seed, n) {
 };
 
 /**
- *  乱数をひとつ生成する（Math.random()互換）
- *  @return {number} [0, 1) の範囲の数値
+ *  128bit XORShiftの処理
+ *  @return {number} 32bit符号なし整数の乱数（おまけ機能）
  */
-XORShift.prototype.rnd = function () {
-	/**
-	 *  初期化がまだされていなければ初期化を行う
-	 */
-	if (!this.x) { this.init(Date.now(), 40); }
-
-	/**
-	 *  128bit XORShift
-	 */
+XORShift.prototype.xos128 = function () {
 	var t  = this.x ^ (this.x << 11);
 	this.x = this.y;
 	this.y = this.z;
 	this.z = this.w;
 	this.w = (this.w ^ (this.w >>> 17)) ^ (t ^ (t >>> 13));
+	
+	return (this.w >>> 0);
+};
+
+/**
+ *  乱数をひとつ生成する（Math.random()互換）
+ *  @return {number} [0, 1) の範囲の数値
+ */
+XORShift.prototype.rnd = function () {
+	/**
+	 *  初期状態のままならば、乱数列を進める
+	 *  最初に1回処理してから shuffle() を呼ばないと無限ループになる
+	 */
+	if (this.x === 123456789) {
+		this.xos128();
+		this.shuffle(40);
+	}
 
 	/**
 	 *  >>>0 でunsignedに変換してから、[0, 1) の範囲にして返す
 	 */
+	this.xos128();
 	return ((this.w >>> 0) % 0xffffffff) / 0xffffffff;
 };
