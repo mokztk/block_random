@@ -114,7 +114,7 @@
 			 *  変数の宣言
 			 */
 			var block_size, n_list, min_list, user_seed,
-				alloc_table, pb, i, res;
+				alloc_table, pb, xos, i, res;
 			
 			/**
 			 *  作成した割付表を格納するための配列
@@ -183,10 +183,11 @@
 			
 			/**
 			 *  乱数発生器 XORShift の初期化
+			 *  @type {XORShift}
 			 *  @param {number} seed - 乱数のseed
 			 *  @param {number} n - シャッフルのため乱数列を進める回数
 			 */
-			XORShift.init(user_seed, 50);
+			xos = new XORShift(user_seed, 50);
 			
 			/**
 			 *  割付表の作成
@@ -199,7 +200,7 @@
 				 *  そこで、各群横並びで順次、割付表を伸ばしていくことにする
 				 */
 				for (i = 0; i < n_list; i++) {
-					alloc_table[i] += pb.getBlock(XORShift.rnd());
+					alloc_table[i] += pb.getBlock(xos.rnd());
 				}
 			}
 			
