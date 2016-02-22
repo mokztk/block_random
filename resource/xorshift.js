@@ -32,9 +32,9 @@ var XORShift = function (seed, n) {
 
 	/**
 	 *  乱数のシャッフル
-	 *    回数を指定されていなければ20回分進める
+	 *    回数を指定されていなければ40回分進める
 	 */
-	for (i = 0; i < (n ? n : 20); i++) { this.rnd(); }
+	this.shuffle(n ? n : 40);
 };
 
 /**
