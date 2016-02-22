@@ -82,7 +82,7 @@ XORShift.prototype.rnd = function () {
 	 */
 	if (this.x === 123456789) {
 		this.xos128();
-		this.shuffle(40);
+		this.shuffle(50);
 	}
 
 	/**
