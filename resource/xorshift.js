@@ -14,7 +14,7 @@
  *  128bit XORShift による擬似乱数発生器
  *  @constructor
  *  @param {number} [seed] - 4番目の乱数シードを変更する場合に指定
- *  @param {number} [n = 20] - 乱数列を進める回数
+ *  @param {number} [n = 40] - 乱数列を進める回数
  */
 var XORShift = function (seed, n) {
     var x, y, z, w, i;
