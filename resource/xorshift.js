@@ -1,4 +1,4 @@
-// XORShiftによる擬似乱数発生器　/ MORI Kazutaka / 2016-02-20 update
+// XORShiftによる擬似乱数発生器　/ MORI Kazutaka / 2016-02-23 update
 //  JavaScriptのMath.random()は乱数のseedが設定できない
 //  同じ乱数表を再現できるよう、seedが設定できて実装が簡単なXORShiftで作成
 
@@ -16,7 +16,7 @@
  *  @param {number} [seed] - 4番目の乱数シードを変更する場合に指定
  */
 var XORShift = function (seed) {
-    var x, y, z, w;
+	var x, y, z, w;
 	
 	/**
 	 *  seedsの初期化
