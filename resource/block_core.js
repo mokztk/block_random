@@ -1,4 +1,4 @@
-// Permuted block randomization のコア処理 | MORI Kazutaka | 2016-02-20
+// Permuted block randomization のコア処理 | MORI Kazutaka | 2016-02-23
 
 "use strict";
 
