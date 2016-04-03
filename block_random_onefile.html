@@ -42,7 +42,6 @@
 			font-weight : bold; background-color : lightgray;
 		}
 		td.reslist {
-			letter-spacing : 1ex;
 		}
 		
 		@media print {
@@ -399,6 +398,11 @@
 					alloc_table[i] += pb.getBlock(xos.rnd());
 				}
 			}
+			
+			/* 割付表を1文字ずつスペースで区切る */
+			$(alloc_table).each(function(obj, i){
+				alloc_table[i] = obj.split("").join(" ");
+			})
 			
 			/**
 			 *  結果を表にする
