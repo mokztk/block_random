@@ -203,6 +203,11 @@
 				}
 			}
 			
+			/* 割付表を1文字ずつスペースで区切る */
+			$(alloc_table).each(function(obj, i){
+				alloc_table[i] = obj.split("").join(" ");
+			})
+			
 			/**
 			 *  結果を表にする
 			 *  あわせて乱数表番号（seed）も表示する
